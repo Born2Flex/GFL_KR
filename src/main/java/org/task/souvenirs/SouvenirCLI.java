@@ -12,7 +12,6 @@ import java.util.Scanner;
 import static org.task.ApplicationCLI.chooseOption;
 import static org.task.producer.ProducerCLI.getProducer;
 
-//TODO Implement methods
 public class SouvenirCLI {
     private static final Logger LOGGER = LoggerFactory.getLogger(SouvenirCLI.class);
     private static SouvenirCLI souvenirCLI;

@@ -2,6 +2,7 @@ package org.task.producer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.task.souvenirs.SouvenirService;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,15 +13,17 @@ import static org.task.ApplicationCLI.chooseOption;
 public class ProducerCLI {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProducerCLI.class);
     private final ProducerService producerService;
+    private final SouvenirService souvenirService;
     private static ProducerCLI producerCLI;
 
-    private ProducerCLI(ProducerService producerService) {
+    private ProducerCLI(ProducerService producerService, SouvenirService souvenirService) {
         this.producerService = producerService;
+        this.souvenirService = souvenirService;
     }
 
     public static ProducerCLI getInstance() {
         if (producerCLI == null) {
-            producerCLI = new ProducerCLI(ProducerService.getInstance());
+            producerCLI = new ProducerCLI(ProducerService.getInstance(), SouvenirService.getInstance());
         }
         return producerCLI;
     }
@@ -31,7 +34,7 @@ public class ProducerCLI {
             LOGGER.info("Choose option:");
             LOGGER.info("1. Add producer");
             LOGGER.info("2. Edit producer");
-            LOGGER.info("3. Remove producer");
+            LOGGER.info("3. Remove producer (All souvenirs of this producer will be removed)");
             LOGGER.info("4. Exit");
             int option = Integer.parseInt(scanner.nextLine());
             switch (option) {
@@ -83,6 +86,8 @@ public class ProducerCLI {
         if (producer.isEmpty()) {
             return;
         }
+        souvenirService.getSouvenirsByProducerId(producer.get().getId())
+                .forEach(souvenir -> souvenirService.removeSouvenir(souvenir.getId()));
         producerService.removeProducer(producer.get().getId());
     }
 

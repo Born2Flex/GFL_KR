@@ -38,7 +38,7 @@ public class SouvenirService {
     }
 
     public void editSouvenir(int producerId, int souvenirId, String name, String creationDate, double price) {
-        validateName(name, producerId);
+        validateName(name, producerId, souvenirId);
         LocalDate date = getDate(creationDate);
         souvenirRepository.editSouvenir(souvenirId, new Souvenir(name, producerId, date, price));
         LOGGER.debug("Souvenir {} edited", name);
@@ -54,15 +54,17 @@ public class SouvenirService {
         return date;
     }
 
-    private void validateName(String name, int producerId) {
-        if (producerHaveSouvenir(name, producerId)) {
-            throw new RuntimeException("Producer already have souvenir with name " + name);
+    private void validateName(String name, int producerId, int... souvenirId) {
+        boolean producerHasSouvenir = producerHasSouvenir(name, producerId, souvenirId);
+        if (producerHasSouvenir) {
+            throw new RuntimeException("Producer already has a souvenir with name " + name);
         }
     }
 
-    private boolean producerHaveSouvenir(String name, int producerId) {
-        return getSouvenirsByProducerId(producerId).stream()
-                .anyMatch(souvenir -> souvenir.getName().equalsIgnoreCase(name));
+    private boolean producerHasSouvenir(String name, int producerId, int... souvenirId) {
+        List<Souvenir> souvenirs = getSouvenirsByProducerId(producerId);
+        return souvenirs.stream().anyMatch(souvenir -> souvenir.getName().equalsIgnoreCase(name)
+                        && (souvenirId.length == 0 || souvenir.getId() != souvenirId[0]));
     }
 
     public void removeSouvenir(int id) {
@@ -92,7 +94,7 @@ public class SouvenirService {
                 .toList();
     }
 
-    public List<Producer> getProducersOfSouvenirByYear(String souvenirName, int year) { //TODO Test
+    public List<Producer> getProducersOfSouvenirByYear(String souvenirName, int year) {
         return souvenirRepository.getSouvenirs().stream()
                 .filter(souvenir -> souvenir.getName().equalsIgnoreCase(souvenirName)
                         && souvenir.getCreationDate().getYear() == year)
@@ -101,7 +103,6 @@ public class SouvenirService {
     }
 
     public Map<Integer, List<Souvenir>> getSouvenirsByYears() {
-        // using here TreeMap to sort by year
         return souvenirRepository.getSouvenirs().stream()
                 .collect(Collectors.groupingBy(souvenir -> souvenir.getCreationDate().getYear(),
                         TreeMap::new, Collectors.toList()));

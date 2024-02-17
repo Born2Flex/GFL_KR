@@ -39,8 +39,8 @@ public class QueryCLI {
             LOGGER.info("2. Find souvenirs by country");
             LOGGER.info("3. Find producers which prices less then");
             LOGGER.info("4. Show all data about souvenirs and producers");
-            LOGGER.info("5. Find producers of specified souvenir by year");
-            LOGGER.info("6. Find souvenirs by years");
+            LOGGER.info("5. Find producers of specified souvenir and year");
+            LOGGER.info("6. Show souvenirs by years");
             int option = Integer.parseInt(scanner.nextLine());
             switch (option) {
                 case 1:
@@ -74,7 +74,7 @@ public class QueryCLI {
             LOGGER.info("Invalid option");
         }
         List<Souvenir> souvenirs = souvenirService.getSouvenirsByProducerId(producers.get(option - 1).getId());
-        souvenirs.forEach(souvenir -> LOGGER.info(souvenir.toString() + System.lineSeparator()));
+        souvenirs.forEach(souvenir -> LOGGER.info(souvenir.toString()));
     }
 
     private void findSouvenirsByCountry(Scanner scanner) {
@@ -112,7 +112,7 @@ public class QueryCLI {
             LOGGER.info("Invalid option");
         }
         List<Producer> producers = souvenirService.getProducersOfSouvenirByYear(souvenirs.get(option - 1), year);
-        producers.forEach(producer -> LOGGER.info(producer.toString() + System.lineSeparator()));
+        producers.forEach(producer -> LOGGER.info(producer.toString()));
     }
 
     private void findSouvenirsByYears() {
