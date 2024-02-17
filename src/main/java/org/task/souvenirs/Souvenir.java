@@ -62,4 +62,12 @@ public class Souvenir {
     public static void setNextId(AtomicInteger nextId) {
         Souvenir.nextId = nextId;
     }
+
+    @Override
+    public String toString() {
+        return "Name \"" + name + '\"' +
+                ", producer identifier = " + producerId +
+                ", creation date = " + creationDate +
+                ", price = " + price;
+    }
 }

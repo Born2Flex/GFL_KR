@@ -3,6 +3,8 @@ package org.task.producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 public class ProducerService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProducerService.class);
     private final ProducerRepository producerRepository;
@@ -19,17 +21,24 @@ public class ProducerService {
         this.producerRepository = producerRepository;
     }
 
+    public List<Producer> getProducers() {
+        return producerRepository.getProducers();
+    }
+
     public void addProducer(String name, String country) {
-        producerRepository.findProducerByName(name).ifPresent(producer -> {
-            throw new RuntimeException("Producer with name " + name + " already exists");
-        });
+        if (producerRepository.findProducerByName(name).isPresent()) {
+            throw new RuntimeException("Producer with name " + name + " already exist");
+        }
         producerRepository.addProducer(new Producer(name, country));
         LOGGER.debug("Producer {} added", name);
     }
 
     public void editProducer(int id, String name, String country) {
         if (producerRepository.findProducerById(id).isEmpty()) {
-            throw new RuntimeException("Producer with id " + id + " not found");
+            throw new RuntimeException("Producer with id " + id + " not exist");
+        }
+        if (producerRepository.findProducerByName(name).isPresent()) {
+            throw new RuntimeException("Producer with name " + name + " already exist");
         }
         producerRepository.editProducer(id, new Producer(name, country));
         LOGGER.debug("Producer {} edited", name);
@@ -40,4 +49,7 @@ public class ProducerService {
         LOGGER.debug("Producer with id {} removed", id);
     }
 
+    public List<String> getCountries() {
+        return producerRepository.getCountries();
+    }
 }

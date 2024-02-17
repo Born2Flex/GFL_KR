@@ -43,4 +43,9 @@ public class Producer {
     public static void setNextId(AtomicInteger nextId) {
         Producer.nextId = nextId;
     }
+
+    @Override
+    public String toString() {
+        return "\"" + name + "\", " + country;
+    }
 }

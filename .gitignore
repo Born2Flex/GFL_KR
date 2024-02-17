@@ -12,6 +12,7 @@ target/
 *.iws
 *.iml
 *.ipr
+logback.xml
 
 ### Eclipse ###
 .apt_generated

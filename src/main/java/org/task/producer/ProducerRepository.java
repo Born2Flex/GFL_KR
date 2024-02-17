@@ -8,8 +8,8 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ProducerRepository {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProducerRepository.class);
     private static final Path PRODUCERS_FILE = Path.of("producers.csv");
-    private List<Producer> producers;
+    private List<Producer> producers = new ArrayList<>();
     private static ProducerRepository instance;
 
     public static ProducerRepository getInstance() {
@@ -41,12 +41,12 @@ public class ProducerRepository {
     }
 
     public void removeProducer(int id) {
-        producers.stream().filter(x -> x.getId() == id).findFirst().ifPresent(producers::remove);
+        findProducerById(id).ifPresent(producers::remove);
         saveData();
     }
 
     public void editProducer(int id, Producer producer) {
-        Producer oldProducer = producers.stream().filter(x -> Objects.equals(x.getId(), id)).findFirst().orElse(null);
+        Producer oldProducer = findProducerById(id).orElse(null);
         if (oldProducer != null) {
             oldProducer.setName(producer.getName());
             oldProducer.setCountry(producer.getCountry());
@@ -55,20 +55,30 @@ public class ProducerRepository {
     }
 
     public Optional<Producer> findProducerById(int id) {
-        return producers.stream().filter(x -> x.getId() == id).findFirst();
+        for (Producer x : producers) {
+            if (x.getId() == id) {
+                return Optional.of(x);
+            }
+        }
+        return Optional.empty();
     }
 
     public Optional<Producer> findProducerByName(String name) {
-        return producers.stream().filter(x -> x.getName().equals(name)).findFirst();
+        for (Producer x : producers) {
+            if (x.getName().equalsIgnoreCase(name)) {
+                return Optional.of(x);
+            }
+        }
+        return Optional.empty();
     }
 
     private void loadData() {
-        if (Files.exists(PRODUCERS_FILE)) {
+        if (!Files.exists(PRODUCERS_FILE)) {
             LOGGER.debug("Data file of Producers not found");
             return;
         }
         try (BufferedReader br = Files.newBufferedReader(PRODUCERS_FILE)) {
-            producers = br.lines().map(this::mapToProducer).toList();
+            producers = new ArrayList<>(br.lines().map(this::mapToProducer).toList());
             Producer.setNextId(new AtomicInteger(producers.getLast().getId() + 1));
             LOGGER.debug("Data files of Producers loaded successfully");
         } catch (IOException e) {
@@ -85,7 +95,7 @@ public class ProducerRepository {
     public void saveData() {
         try (BufferedWriter bw = Files.newBufferedWriter(PRODUCERS_FILE)) {
             for (Producer producer : producers) {
-                bw.write(convertToCsv(producer));
+                bw.write(convertToCsv(producer) + System.lineSeparator());
             }
             LOGGER.debug("Data of Producers successfully saved");
         } catch (IOException e) {
@@ -96,7 +106,11 @@ public class ProducerRepository {
 
     private String convertToCsv(Producer producer) {
         StringJoiner stringJoiner = new StringJoiner(",");
-        stringJoiner.add(producer.getName()).add(producer.getCountry());
+        stringJoiner.add(String.valueOf(producer.getId())).add(producer.getName()).add(producer.getCountry());
         return stringJoiner.toString();
+    }
+
+    public List<String> getCountries() {
+        return producers.stream().map(Producer::getCountry).distinct().toList();
     }
 }
