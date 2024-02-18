@@ -3,7 +3,8 @@ package org.task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.task.producer.ProducerCLI;
-import org.task.souvenirs.SouvenirCLI;
+import org.task.query.QueryCLI;
+import org.task.souvenir.SouvenirCLI;
 
 import java.util.List;
 import java.util.Scanner;
@@ -35,19 +36,27 @@ public class ApplicationCLI {
         do {
             try {
                 LOGGER.info("Choose option:");
-                LOGGER.info("1. Add/edit/remove producer");
-                LOGGER.info("2. Add/edit/remove souvenir");
-                LOGGER.info("3. Query");
-                LOGGER.info("4. Exit");
+                LOGGER.info("1. Show all producers");
+                LOGGER.info("2. Show all souvenirs");
+                LOGGER.info("3. Add/edit/remove producer");
+                LOGGER.info("4. Add/edit/remove souvenir");
+                LOGGER.info("5. Query");
+                LOGGER.info("6. Exit");
                 int option = Integer.parseInt(scanner.nextLine());
                 switch (option) {
                     case 1:
-                        producerCLI.process(scanner);
+                        producerCLI.showAllProducers();
                         break;
                     case 2:
-                        souvenirCLI.process(scanner);
+                        souvenirCLI.showAllSouvenirs();
                         break;
                     case 3:
+                        producerCLI.process(scanner);
+                        break;
+                    case 4:
+                        souvenirCLI.process(scanner);
+                        break;
+                    case 5:
                         queryCLI.processQuery(scanner);
                         break;
                     default:

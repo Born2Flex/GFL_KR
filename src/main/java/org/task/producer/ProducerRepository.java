@@ -74,7 +74,7 @@ public class ProducerRepository {
 
     private void loadData() {
         if (!Files.exists(PRODUCERS_FILE)) {
-            LOGGER.debug("Data file of Producers not found");
+            LOGGER.info("Data file of Producers not found");
             return;
         }
         try (BufferedReader br = Files.newBufferedReader(PRODUCERS_FILE)) {

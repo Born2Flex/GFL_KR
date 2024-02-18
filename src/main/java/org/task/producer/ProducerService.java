@@ -22,7 +22,7 @@ public class ProducerService {
         this.producerRepository = producerRepository;
     }
 
-    public List<Producer> getProducers() {
+    public List<Producer> getAllProducers() {
         return producerRepository.getProducers();
     }
 

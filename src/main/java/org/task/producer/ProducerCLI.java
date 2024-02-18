@@ -2,8 +2,9 @@ package org.task.producer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.task.souvenirs.SouvenirService;
+import org.task.souvenir.SouvenirService;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -92,12 +93,19 @@ public class ProducerCLI {
     }
 
     public static Optional<Producer> getProducer(ProducerService producerService, Scanner scanner) {
-        List<Producer> producers = producerService.getProducers();
+        List<Producer> producers = producerService.getAllProducers();
         if (producers.isEmpty()) {
             LOGGER.info("No producers");
             return Optional.empty();
         }
         int option = chooseOption(scanner, producers);
         return Optional.of(producers.get(option - 1));
+    }
+
+    public void showAllProducers() {
+        List<Producer> producers = producerService.getAllProducers();
+        producers.stream()
+                .sorted(Comparator.comparing(Producer::getName))
+                .forEach(producer -> LOGGER.info(producer.toString()));
     }
 }

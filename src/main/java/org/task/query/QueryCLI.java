@@ -1,11 +1,11 @@
-package org.task;
+package org.task.query;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.task.producer.Producer;
 import org.task.producer.ProducerService;
-import org.task.souvenirs.Souvenir;
-import org.task.souvenirs.SouvenirService;
+import org.task.souvenir.Souvenir;
+import org.task.souvenir.SouvenirService;
 
 import java.util.List;
 import java.util.Map;
@@ -41,25 +41,26 @@ public class QueryCLI {
             LOGGER.info("4. Show all data about souvenirs and producers");
             LOGGER.info("5. Find producers of specified souvenir and year");
             LOGGER.info("6. Show souvenirs by years");
+            LOGGER.info("7. Exit");
             int option = Integer.parseInt(scanner.nextLine());
             switch (option) {
                 case 1:
-                    findSouvenirsByProducer(scanner);
+                    getSouvenirsByProducer(scanner);
                     break;
                 case 2:
-                    findSouvenirsByCountry(scanner);
+                    getSouvenirsByCountry(scanner);
                     break;
                 case 3:
-                    findProducersWhichPricesLessThen(scanner);
+                    getProducersWhichPricesLessThen(scanner);
                     break;
                 case 4:
-                    findAllDataAboutSouvenirs();
+                    getAllDataAboutSouvenirs();
                     break;
                 case 5:
-                    findProducersOfSouvenirByYear(scanner);
+                    getProducersOfSouvenirByYear(scanner);
                     break;
                 case 6:
-                    findSouvenirsByYears();
+                    getSouvenirsByYears();
                     break;
                 default:
                     exit = true;
@@ -67,37 +68,46 @@ public class QueryCLI {
         } while (!exit);
     }
 
-    private void findSouvenirsByProducer(Scanner scanner) {
-        List<Producer> producers = producerService.getProducers();
+    private void getSouvenirsByProducer(Scanner scanner) {
+        List<Producer> producers = producerService.getAllProducers();
+        if (producers.isEmpty()) {
+            LOGGER.info("No producers");
+            return;
+        }
         int option = chooseOption(scanner, producers);
         List<Souvenir> souvenirs = souvenirService.getSouvenirsByProducerId(producers.get(option - 1).getId());
         souvenirs.forEach(souvenir -> LOGGER.info(souvenir.toString()));
     }
 
-    private void findSouvenirsByCountry(Scanner scanner) {
-        List<String> producers = producerService.getCountries();
-        int option = chooseOption(scanner, producers);
-        List<Souvenir> souvenirs = souvenirService.getSouvenirsByCountry(producers.get(option - 1));
+    private void getSouvenirsByCountry(Scanner scanner) {
+        List<String> countries = producerService.getCountries();
+        if (countries.isEmpty()) {
+            LOGGER.info("No countries to choose, because no producers");
+            return;
+        }
+        int option = chooseOption(scanner, countries);
+        List<Souvenir> souvenirs = souvenirService.getSouvenirsByCountry(countries.get(option - 1));
         souvenirs.forEach(souvenir -> LOGGER.info(souvenir.toString()));
     }
 
-    private void findProducersWhichPricesLessThen(Scanner scanner) {
+    private void getProducersWhichPricesLessThen(Scanner scanner) {
         LOGGER.info("Enter price:");
         double price = Double.parseDouble(scanner.nextLine());
         List<Producer> producers = souvenirService.getProducersWhichPricesLessThen(price);
         producers.forEach(producer -> LOGGER.info(producer.toString()));
     }
 
-    private void findAllDataAboutSouvenirs() {
-        List<Producer> producers = producerService.getProducers();
+    private void getAllDataAboutSouvenirs() {
+        List<Producer> producers = producerService.getAllProducers();
         producers.forEach(producer -> {
             LOGGER.info("Producer: {}", producer);
+            LOGGER.info("\tSouvenirs:");
             List<Souvenir> souvenirs = souvenirService.getProducersOfSouvenir(producer.getId());
-            souvenirs.forEach(souvenir -> LOGGER.info("\t" + souvenir.toString()));
+            souvenirs.forEach(souvenir -> LOGGER.info("\t\t{}", souvenir));
         });
     }
 
-    private void findProducersOfSouvenirByYear(Scanner scanner) {
+    private void getProducersOfSouvenirByYear(Scanner scanner) {
         LOGGER.info("Enter year:");
         int year = Integer.parseInt(scanner.nextLine());
         List<String> souvenirs = souvenirService.getSouvenirTypes();
@@ -106,11 +116,11 @@ public class QueryCLI {
         producers.forEach(producer -> LOGGER.info(producer.toString()));
     }
 
-    private void findSouvenirsByYears() {
+    private void getSouvenirsByYears() {
         Map<Integer, List<Souvenir>> souvenirs = souvenirService.getSouvenirsByYears();
         souvenirs.forEach((year, list) -> {
             LOGGER.info("Year: {}", year);
-            list.forEach(souvenir -> LOGGER.info(souvenir.toString()));
+            list.forEach(souvenir -> LOGGER.info("\t{}", souvenir));
         });
     }
 }

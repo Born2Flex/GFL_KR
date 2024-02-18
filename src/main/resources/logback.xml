@@ -1,8 +1,7 @@
 <configuration>
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%green(%d{yyyy-MM-dd HH:mm:ss}) [%blue(%t)] %highlight(%-5level) %yellow(%logger{36}):
-                %msg%n%throwable
+            <pattern>%green(%d{yyyy-MM-dd HH:mm:ss}) [%blue(%t)] %highlight(%-5level) %yellow(%logger{36}): %msg%n%throwable
             </pattern>
         </encoder>
     </appender>

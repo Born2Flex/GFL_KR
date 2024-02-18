@@ -1,4 +1,4 @@
-package org.task.souvenirs;
+package org.task.souvenir;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +70,7 @@ public class SouvenirRepository {
         return Optional.empty();
     }
 
-    public List<Souvenir> findByProducerId(int id) {
+    public List<Souvenir> findSouvenirsByProducerId(int id) {
         return souvenirs.stream().filter(x -> x.getProducerId() == id).toList();
     }
 

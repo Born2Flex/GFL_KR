@@ -1,10 +1,11 @@
-package org.task.souvenirs;
+package org.task.souvenir;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.task.producer.Producer;
 import org.task.producer.ProducerService;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -90,6 +91,10 @@ public class SouvenirCLI {
 
     private void chooseFromExistingSouvenirs(int producerId, Scanner scanner) {
         List<String> souvenirs = souvenirService.getSouvenirTypes();
+        if (souvenirs.isEmpty()) {
+            LOGGER.info("No souvenirs available");
+            return;
+        }
         int option = chooseOption(scanner, souvenirs);
         LOGGER.info("Enter date (yyyy-mm-dd):");
         String date = scanner.nextLine().trim();
@@ -145,5 +150,12 @@ public class SouvenirCLI {
             return;
         }
         souvenirService.removeSouvenir(souvenir.get().getId());
+    }
+
+    public void showAllSouvenirs() {
+        List<Souvenir> souvenirs = souvenirService.getAllSouvenirs();
+        souvenirs.stream()
+                .sorted(Comparator.comparing(Souvenir::getName))
+                .forEach(souvenir -> LOGGER.info(souvenir.toString()));
     }
 }

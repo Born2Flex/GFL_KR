@@ -1,4 +1,4 @@
-package org.task.souvenirs;
+package org.task.souvenir;
 
 import java.time.LocalDate;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -66,7 +66,6 @@ public class Souvenir {
     @Override
     public String toString() {
         return "Name \"" + name + '\"' +
-                ", producer identifier = " + producerId +
                 ", creation date = " + creationDate +
                 ", price = " + price;
     }

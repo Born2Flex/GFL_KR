@@ -1,4 +1,4 @@
-package org.task.souvenirs;
+package org.task.souvenir;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,8 +55,7 @@ public class SouvenirService {
     }
 
     private void validateName(String name, int producerId, int... souvenirId) {
-        boolean producerHasSouvenir = producerHasSouvenir(name, producerId, souvenirId);
-        if (producerHasSouvenir) {
+        if (producerHasSouvenir(name, producerId, souvenirId)) {
             throw new RuntimeException("Producer already has a souvenir with name " + name);
         }
     }
@@ -73,7 +72,7 @@ public class SouvenirService {
     }
 
     public List<Souvenir> getSouvenirsByProducerId(int id) {
-        return souvenirRepository.findByProducerId(id);
+        return souvenirRepository.findSouvenirsByProducerId(id);
     }
 
     public List<Souvenir> getSouvenirsByCountry(String country) {
@@ -108,7 +107,7 @@ public class SouvenirService {
                         TreeMap::new, Collectors.toList()));
     }
 
-    public List<Souvenir> getSouvenirs() {
+    public List<Souvenir> getAllSouvenirs() {
         return souvenirRepository.getSouvenirs();
     }
 
@@ -117,6 +116,6 @@ public class SouvenirService {
     }
 
     public List<Souvenir> getProducersOfSouvenir(int producerId) {
-        return souvenirRepository.findByProducerId(producerId);
+        return souvenirRepository.findSouvenirsByProducerId(producerId);
     }
 }
