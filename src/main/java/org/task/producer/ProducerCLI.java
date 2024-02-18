@@ -98,10 +98,6 @@ public class ProducerCLI {
             return Optional.empty();
         }
         int option = chooseOption(scanner, producers);
-        if (option < 1 || option > producers.size()) {
-            LOGGER.info("Exit");
-            return Optional.empty();
-        }
         return Optional.of(producers.get(option - 1));
     }
 }

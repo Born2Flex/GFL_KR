@@ -91,10 +91,6 @@ public class SouvenirCLI {
     private void chooseFromExistingSouvenirs(int producerId, Scanner scanner) {
         List<String> souvenirs = souvenirService.getSouvenirTypes();
         int option = chooseOption(scanner, souvenirs);
-        if (option < 1 || option > souvenirs.size()) {
-            LOGGER.info("Exit");
-            return;
-        }
         LOGGER.info("Enter date (yyyy-mm-dd):");
         String date = scanner.nextLine().trim();
         LOGGER.info("Enter price:");
@@ -136,10 +132,6 @@ public class SouvenirCLI {
             return Optional.empty();
         }
         int option = chooseOption(scanner, souvenirs);
-        if (option < 1 || option > souvenirs.size()) {
-            LOGGER.info("Exit");
-            return Optional.empty();
-        }
         return Optional.of(souvenirs.get(option - 1));
     }
 

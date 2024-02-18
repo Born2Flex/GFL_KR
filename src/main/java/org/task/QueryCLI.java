@@ -37,7 +37,7 @@ public class QueryCLI {
             LOGGER.info("Choose option:");
             LOGGER.info("1. Find souvenirs by producer");
             LOGGER.info("2. Find souvenirs by country");
-            LOGGER.info("3. Find producers which prices less then");
+            LOGGER.info("3. Find producers whose prices less then specified value");
             LOGGER.info("4. Show all data about souvenirs and producers");
             LOGGER.info("5. Find producers of specified souvenir and year");
             LOGGER.info("6. Show souvenirs by years");
@@ -70,9 +70,6 @@ public class QueryCLI {
     private void findSouvenirsByProducer(Scanner scanner) {
         List<Producer> producers = producerService.getProducers();
         int option = chooseOption(scanner, producers);
-        if (option < 1 || option > producers.size()) {
-            LOGGER.info("Invalid option");
-        }
         List<Souvenir> souvenirs = souvenirService.getSouvenirsByProducerId(producers.get(option - 1).getId());
         souvenirs.forEach(souvenir -> LOGGER.info(souvenir.toString()));
     }
@@ -80,9 +77,6 @@ public class QueryCLI {
     private void findSouvenirsByCountry(Scanner scanner) {
         List<String> producers = producerService.getCountries();
         int option = chooseOption(scanner, producers);
-        if (option < 1 || option > producers.size()) {
-            LOGGER.info("Invalid option");
-        }
         List<Souvenir> souvenirs = souvenirService.getSouvenirsByCountry(producers.get(option - 1));
         souvenirs.forEach(souvenir -> LOGGER.info(souvenir.toString()));
     }
@@ -108,9 +102,6 @@ public class QueryCLI {
         int year = Integer.parseInt(scanner.nextLine());
         List<String> souvenirs = souvenirService.getSouvenirTypes();
         int option = chooseOption(scanner, souvenirs);
-        if (option < 1 || option > souvenirs.size()) {
-            LOGGER.info("Invalid option");
-        }
         List<Producer> producers = souvenirService.getProducersOfSouvenirByYear(souvenirs.get(option - 1), year);
         producers.forEach(producer -> LOGGER.info(producer.toString()));
     }

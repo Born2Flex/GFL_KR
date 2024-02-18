@@ -37,7 +37,7 @@ public class ApplicationCLI {
                 LOGGER.info("Choose option:");
                 LOGGER.info("1. Add/edit/remove producer");
                 LOGGER.info("2. Add/edit/remove souvenir");
-                LOGGER.info("3. Query data");
+                LOGGER.info("3. Query");
                 LOGGER.info("4. Exit");
                 int option = Integer.parseInt(scanner.nextLine());
                 switch (option) {
@@ -57,14 +57,18 @@ public class ApplicationCLI {
                 LOGGER.info(e.getMessage());
             }
         } while (!exit);
-        LOGGER.info("Application finished");
+        LOGGER.info("Application stopped");
     }
 
-    public static int chooseOption(Scanner scanner, List<?> producers) {
+    public static int chooseOption(Scanner scanner, List<?> options) {
         LOGGER.info("Choose:");
-        for (int i = 0; i < producers.size(); i++) {
-            LOGGER.info((i + 1) + ". " + producers.get(i));
+        for (int i = 0; i < options.size(); i++) {
+            LOGGER.info("{}. {}", (i + 1), options.get(i));
         }
-        return Integer.parseInt(scanner.nextLine());
+        int option = Integer.parseInt(scanner.nextLine());
+        if (option < 1 || option > options.size()) {
+            throw new RuntimeException("Exit");
+        }
+        return option;
     }
 }

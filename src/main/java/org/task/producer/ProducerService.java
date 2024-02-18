@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ProducerService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProducerService.class);
@@ -37,7 +38,8 @@ public class ProducerService {
         if (producerRepository.findProducerById(id).isEmpty()) {
             throw new RuntimeException("Producer with id " + id + " not exist");
         }
-        if (producerRepository.findProducerByName(name).isPresent()) {
+        Optional<Producer> producer = producerRepository.findProducerByName(name);
+        if (producer.isPresent() && producer.get().getId() != id) {
             throw new RuntimeException("Producer with name " + name + " already exist");
         }
         producerRepository.editProducer(id, new Producer(name, country));
