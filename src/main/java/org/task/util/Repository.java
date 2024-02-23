@@ -13,8 +13,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractRepository<T extends BaseModel> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractRepository.class);
+public abstract class Repository<T extends BaseModel> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Repository.class);
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     protected List<T> items = new ArrayList<>();
@@ -49,7 +49,7 @@ public abstract class AbstractRepository<T extends BaseModel> {
 
     protected void loadData(Class<T> typeClass) {
         if (!Files.exists(getFilePath())) {
-            LOGGER.info("Data files of {} not found", typeClass);
+            LOGGER.info("Data files of {}s not found", typeClass.getSimpleName());
             return;
         }
         try (BufferedReader souvenirsReader = Files.newBufferedReader(getFilePath())) {

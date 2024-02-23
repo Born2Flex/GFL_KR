@@ -16,7 +16,7 @@ public class Souvenir implements BaseModel {
     public Souvenir() {
     }
 
-    public Souvenir(String name, int producerId, LocalDate creationDate, double price) {
+    private Souvenir(String name, int producerId, LocalDate creationDate, double price) {
         this.id = nextId.getAndIncrement();
         this.name = name;
         this.producerId = producerId;
@@ -24,7 +24,7 @@ public class Souvenir implements BaseModel {
         this.price = price;
     }
 
-    public Souvenir(int id, String name, int producerId, LocalDate creationDate, double price) {
+    private Souvenir(int id, String name, int producerId, LocalDate creationDate, double price) {
         this.id = id;
         this.name = name;
         this.producerId = producerId;
@@ -75,7 +75,7 @@ public class Souvenir implements BaseModel {
                 ", price = " + price;
     }
 
-    public static class Builder {
+    public static class SouvenirBuilder {
         private boolean idSet;
         private int id;
         private String name;
@@ -83,28 +83,28 @@ public class Souvenir implements BaseModel {
         private LocalDate creationDate;
         private double price;
 
-        public Builder setId(int id) {
+        public SouvenirBuilder setId(int id) {
             this.id = id;
             idSet = true;
             return this;
         }
 
-        public Builder setName(String name) {
+        public SouvenirBuilder setName(String name) {
             this.name = name;
             return this;
         }
 
-        public Builder setProducerId(int producerId) {
+        public SouvenirBuilder setProducerId(int producerId) {
             this.producerId = producerId;
             return this;
         }
 
-        public Builder setCreationDate(LocalDate creationDate) {
+        public SouvenirBuilder setCreationDate(LocalDate creationDate) {
             this.creationDate = creationDate;
             return this;
         }
 
-        public Builder setPrice(double price) {
+        public SouvenirBuilder setPrice(double price) {
             this.price = price;
             return this;
         }

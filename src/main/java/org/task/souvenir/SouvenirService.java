@@ -33,14 +33,22 @@ public class SouvenirService {
     public void addSouvenir(String name, int producerId, String creationDate, double price) {
         validateName(name, producerId);
         LocalDate date = getDate(creationDate);
-        souvenirRepository.add(new Souvenir(name, producerId, date, price));
+        souvenirRepository.add(new Souvenir.SouvenirBuilder().setName(name)
+                .setProducerId(producerId)
+                .setCreationDate(date)
+                .setPrice(price)
+                .build());
         LOGGER.debug("Souvenir {} added", name);
     }
 
     public void editSouvenir(int producerId, int souvenirId, String name, String creationDate, double price) {
         validateName(name, producerId, souvenirId);
         LocalDate date = getDate(creationDate);
-        souvenirRepository.edit(souvenirId, new Souvenir(name, producerId, date, price));
+        souvenirRepository.edit(souvenirId, new Souvenir.SouvenirBuilder().setName(name)
+                .setProducerId(producerId)
+                .setCreationDate(date)
+                .setPrice(price)
+                .build());
         LOGGER.debug("Souvenir {} edited", name);
     }
 
@@ -55,12 +63,12 @@ public class SouvenirService {
     }
 
     private void validateName(String name, int producerId, int... souvenirId) {
-        if (producerHasSouvenir(name, producerId, souvenirId)) {
-            throw new RuntimeException("Producer already has a souvenir with name " + name);
+        if (producerHaveSouvenir(name, producerId, souvenirId)) {
+            throw new RuntimeException("Producer already have a souvenir with name " + name);
         }
     }
 
-    private boolean producerHasSouvenir(String name, int producerId, int... souvenirId) {
+    private boolean producerHaveSouvenir(String name, int producerId, int... souvenirId) {
         List<Souvenir> souvenirs = getSouvenirsByProducerId(producerId);
         return souvenirs.stream().anyMatch(souvenir -> souvenir.getName().equalsIgnoreCase(name)
                         && (souvenirId.length == 0 || souvenir.getId() != souvenirId[0]));

@@ -11,17 +11,6 @@
     "price": 100.0
   },
   {
-    "id": 2,
-    "name": "Cap",
-    "producerId": 5,
-    "creationDate": [
-      2023,
-      12,
-      10
-    ],
-    "price": 25.0
-  },
-  {
     "id": 3,
     "name": "Magnet",
     "producerId": 11,

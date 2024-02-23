@@ -30,7 +30,7 @@ public class ProducerService {
         if (producerRepository.findProducerByName(name).isPresent()) {
             throw new RuntimeException("Producer with name " + name + " already exist");
         }
-        producerRepository.add(new Producer(name, country));
+        producerRepository.add(new Producer.ProducerBuilder().setName(name).setCountry(country).build());
         LOGGER.debug("Producer {} added", name);
     }
 
@@ -42,7 +42,7 @@ public class ProducerService {
         if (producer.isPresent() && producer.get().getId() != id) {
             throw new RuntimeException("Producer with name " + name + " already exist");
         }
-        producerRepository.edit(id, new Producer(name, country));
+        producerRepository.edit(id, new Producer.ProducerBuilder().setName(name).setCountry(country).build());
         LOGGER.debug("Producer {} edited", name);
     }
 

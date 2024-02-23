@@ -1,17 +1,22 @@
 package org.task.producer;
 
-import org.task.util.AbstractRepository;
+import org.task.util.Repository;
 
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class ProducerRepository extends AbstractRepository<Producer> {
-    //    private static final Logger LOGGER = LoggerFactory.getLogger(ProducerRepository.class);
-    private static final Path PRODUCERS_FILE = Path.of("producers.csv");
-    //    private List<Producer> producers = new ArrayList<>();
+public class ProducerRepository extends Repository<Producer> {
+    private static final Path PRODUCERS_FILE = Path.of("producers.json");
     private static ProducerRepository instance;
+
+    private ProducerRepository() {
+        loadData(Producer.class);
+        if (!items.isEmpty()) {
+            Producer.setNextId(new AtomicInteger(items.getLast().getId() + 1));
+        }
+    }
 
     public static ProducerRepository getInstance() {
         if (instance == null) {
@@ -35,11 +40,6 @@ public class ProducerRepository extends AbstractRepository<Producer> {
         return PRODUCERS_FILE;
     }
 
-    private ProducerRepository() {
-        loadData(Producer.class);
-        Producer.setNextId(new AtomicInteger(items.getLast().getId() + 1));
-    }
-
     public Optional<Producer> findProducerById(int id) {
         for (Producer x : items) {
             if (x.getId() == id) {
@@ -57,26 +57,6 @@ public class ProducerRepository extends AbstractRepository<Producer> {
         }
         return Optional.empty();
     }
-
-//    private void loadData() {
-//        if (!Files.exists(PRODUCERS_FILE)) {
-//            LOGGER.info("Data file of Producers not found");
-//            return;
-//        }
-//        try (BufferedReader br = Files.newBufferedReader(PRODUCERS_FILE)) {
-//            items = new ArrayList<>(br.lines().map(this::mapToProducer).toList());
-//            Producer.setNextId(new AtomicInteger(items.getLast().getId() + 1));
-//            LOGGER.debug("Data files of Producers loaded successfully");
-//        } catch (IOException e) {
-//            LOGGER.info("Error occurred while trying to load Producers data", e);
-//            throw new RuntimeException(e);
-//        }
-//    }
-//
-//    private Producer mapToProducer(String line) {
-//        String[] ar = line.split(",");
-//        return new Producer(Integer.parseInt(ar[0]), ar[1], ar[2]);
-//    }
 
     public List<String> getCountries() {
         return items.stream().map(Producer::getCountry).distinct().toList();
