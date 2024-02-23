@@ -1,15 +1,20 @@
 package org.task.souvenir;
 
+import org.task.models.BaseModel;
+
 import java.time.LocalDate;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Souvenir {
+public class Souvenir implements BaseModel {
     private static AtomicInteger nextId = new AtomicInteger(1);
-    private final int id;
+    private int id;
     private String name;
-    private final int producerId;
+    private int producerId;
     private LocalDate creationDate;
     private double price;
+
+    public Souvenir() {
+    }
 
     public Souvenir(String name, int producerId, LocalDate creationDate, double price) {
         this.id = nextId.getAndIncrement();

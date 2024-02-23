@@ -1,8 +1,10 @@
 package org.task.producer;
 
+import org.task.models.BaseModel;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Producer {
+public class Producer implements BaseModel {
     private static AtomicInteger nextId = new AtomicInteger(1);
     private final int id;
     private String name;
@@ -20,7 +22,7 @@ public class Producer {
         this.country = country;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
