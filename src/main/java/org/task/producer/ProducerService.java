@@ -23,14 +23,14 @@ public class ProducerService {
     }
 
     public List<Producer> getAllProducers() {
-        return producerRepository.getProducers();
+        return producerRepository.getAll();
     }
 
     public void addProducer(String name, String country) {
         if (producerRepository.findProducerByName(name).isPresent()) {
             throw new RuntimeException("Producer with name " + name + " already exist");
         }
-        producerRepository.addProducer(new Producer(name, country));
+        producerRepository.add(new Producer(name, country));
         LOGGER.debug("Producer {} added", name);
     }
 
@@ -42,12 +42,12 @@ public class ProducerService {
         if (producer.isPresent() && producer.get().getId() != id) {
             throw new RuntimeException("Producer with name " + name + " already exist");
         }
-        producerRepository.editProducer(id, new Producer(name, country));
+        producerRepository.edit(id, new Producer(name, country));
         LOGGER.debug("Producer {} edited", name);
     }
 
     public void removeProducer(int id) {
-        producerRepository.removeProducer(id);
+        producerRepository.remove(id);
         LOGGER.debug("Producer with id {} removed", id);
     }
 

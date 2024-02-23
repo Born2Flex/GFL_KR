@@ -1,4 +1,4 @@
-package org.task.models;
+package org.task.util;
 
 public interface BaseModel {
     int getId();

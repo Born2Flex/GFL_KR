@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "Nova Poshta",
+    "country": "Ukraine"
+  },
+  {
+    "id": 3,
+    "name": "Airbus",
+    "country": "Netherlands"
+  },
+  {
+    "id": 5,
+    "name": "Spotify",
+    "country": "Sweden"
+  },
+  {
+    "id": 6,
+    "name": "Microsoft",
+    "country": "USA"
+  },
+  {
+    "id": 10,
+    "name": "Oracle",
+    "country": "USA"
+  },
+  {
+    "id": 11,
+    "name": "JetBrains",
+    "country": "Czech Republic"
+  }
+]

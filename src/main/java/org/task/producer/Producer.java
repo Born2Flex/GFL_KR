@@ -1,6 +1,6 @@
 package org.task.producer;
 
-import org.task.models.BaseModel;
+import org.task.util.BaseModel;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

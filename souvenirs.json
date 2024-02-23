@@ -1,0 +1,123 @@
+[
+  {
+    "id": 1,
+    "name": "Cup",
+    "producerId": 1,
+    "creationDate": [
+      2024,
+      5,
+      16
+    ],
+    "price": 100.0
+  },
+  {
+    "id": 2,
+    "name": "Cap",
+    "producerId": 5,
+    "creationDate": [
+      2023,
+      12,
+      10
+    ],
+    "price": 25.0
+  },
+  {
+    "id": 3,
+    "name": "Magnet",
+    "producerId": 11,
+    "creationDate": [
+      2019,
+      9,
+      10
+    ],
+    "price": 10.0
+  },
+  {
+    "id": 4,
+    "name": "Cup",
+    "producerId": 10,
+    "creationDate": [
+      2020,
+      6,
+      7
+    ],
+    "price": 55.0
+  },
+  {
+    "id": 5,
+    "name": "Book",
+    "producerId": 10,
+    "creationDate": [
+      2019,
+      5,
+      17
+    ],
+    "price": 89.0
+  },
+  {
+    "id": 6,
+    "name": "Beanie",
+    "producerId": 6,
+    "creationDate": [
+      2018,
+      12,
+      10
+    ],
+    "price": 105.0
+  },
+  {
+    "id": 7,
+    "name": "Book",
+    "producerId": 11,
+    "creationDate": [
+      2019,
+      9,
+      10
+    ],
+    "price": 68.0
+  },
+  {
+    "id": 8,
+    "name": "Sweater",
+    "producerId": 3,
+    "creationDate": [
+      2024,
+      3,
+      15
+    ],
+    "price": 159.9
+  },
+  {
+    "id": 9,
+    "name": "Keychain",
+    "producerId": 5,
+    "creationDate": [
+      2018,
+      4,
+      3
+    ],
+    "price": 7.5
+  },
+  {
+    "id": 10,
+    "name": "Cap",
+    "producerId": 3,
+    "creationDate": [
+      2023,
+      10,
+      12
+    ],
+    "price": 45.0
+  },
+  {
+    "id": 12,
+    "name": "Keychain",
+    "producerId": 6,
+    "creationDate": [
+      2023,
+      7,
+      10
+    ],
+    "price": 15.0
+  }
+]

@@ -33,14 +33,14 @@ public class SouvenirService {
     public void addSouvenir(String name, int producerId, String creationDate, double price) {
         validateName(name, producerId);
         LocalDate date = getDate(creationDate);
-        souvenirRepository.addSouvenir(new Souvenir(name, producerId, date, price));
+        souvenirRepository.add(new Souvenir(name, producerId, date, price));
         LOGGER.debug("Souvenir {} added", name);
     }
 
     public void editSouvenir(int producerId, int souvenirId, String name, String creationDate, double price) {
         validateName(name, producerId, souvenirId);
         LocalDate date = getDate(creationDate);
-        souvenirRepository.editSouvenir(souvenirId, new Souvenir(name, producerId, date, price));
+        souvenirRepository.edit(souvenirId, new Souvenir(name, producerId, date, price));
         LOGGER.debug("Souvenir {} edited", name);
     }
 
@@ -67,7 +67,7 @@ public class SouvenirService {
     }
 
     public void removeSouvenir(int id) {
-        souvenirRepository.removeSouvenir(id);
+        souvenirRepository.remove(id);
         LOGGER.debug("Souvenir with id {} removed", id);
     }
 
@@ -76,7 +76,7 @@ public class SouvenirService {
     }
 
     public List<Souvenir> getSouvenirsByCountry(String country) {
-        return producerRepository.getProducers().stream()
+        return producerRepository.getAll().stream()
                 .filter(producer -> producer.getCountry().equals(country))
                 .flatMap(producer -> getSouvenirsByProducerId(producer.getId()).stream())
                 .toList();
@@ -84,7 +84,7 @@ public class SouvenirService {
 
     public List<Producer> getProducersWhichPricesLessThen(double priceLimit) {
         // Map<ProducerId, List<Prices>>
-        Map<Integer, List<Double>> map = souvenirRepository.getSouvenirs().stream()
+        Map<Integer, List<Double>> map = souvenirRepository.getAll().stream()
                 .collect(Collectors.groupingBy(Souvenir::getProducerId,
                         Collectors.mapping(Souvenir::getPrice, Collectors.toList())));
         return map.entrySet().stream()
@@ -94,7 +94,7 @@ public class SouvenirService {
     }
 
     public List<Producer> getProducersOfSouvenirByYear(String souvenirName, int year) {
-        return souvenirRepository.getSouvenirs().stream()
+        return souvenirRepository.getAll().stream()
                 .filter(souvenir -> souvenir.getName().equalsIgnoreCase(souvenirName)
                         && souvenir.getCreationDate().getYear() == year)
                 .map(souvenir -> producerRepository.findProducerById(souvenir.getProducerId()).get())
@@ -102,13 +102,13 @@ public class SouvenirService {
     }
 
     public Map<Integer, List<Souvenir>> getSouvenirsByYears() {
-        return souvenirRepository.getSouvenirs().stream()
+        return souvenirRepository.getAll().stream()
                 .collect(Collectors.groupingBy(souvenir -> souvenir.getCreationDate().getYear(),
                         TreeMap::new, Collectors.toList()));
     }
 
     public List<Souvenir> getAllSouvenirs() {
-        return souvenirRepository.getSouvenirs();
+        return souvenirRepository.getAll();
     }
 
     public List<String> getSouvenirTypes() {

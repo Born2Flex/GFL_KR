@@ -1,9 +1,9 @@
-package org.task.souvenir;
+package org.task.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.task.models.BaseModel;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -15,43 +15,44 @@ import java.util.List;
 
 public abstract class AbstractRepository<T extends BaseModel> {
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractRepository.class);
-    private List<T> items = new ArrayList<>();
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
-    protected void addItem(T item) {
+    protected List<T> items = new ArrayList<>();
+
+    public void add(T item) {
         items.add(item);
         saveData();
     }
 
-    protected void removeItem(int id) {
+    public void remove(int id) {
         items.removeIf(x -> x.getId() == id);
         saveData();
     }
 
     protected abstract void edit(int id, T item);
 
-    public List<T> getItems() {
+    public List<T> getAll() {
         return items;
     }
 
-    protected abstract String getFileName();
+    protected abstract Path getFilePath();
 
     protected void saveData() {
-        try (BufferedWriter writer = Files.newBufferedWriter(Path.of(getFileName()))) {
+        try (BufferedWriter writer = Files.newBufferedWriter(getFilePath())) {
             objectMapper.writeValue(writer, items);
-            LOGGER.debug("Data successfully saved in file {}", getFileName());
+            LOGGER.debug("Data successfully saved in file {}", getFilePath());
         } catch (IOException e) {
-            LOGGER.info("Error occurred while trying to save data in {}", getFileName(), e);
+            LOGGER.info("Error occurred while trying to save data in {}", getFilePath(), e);
             throw new RuntimeException(e);
         }
     }
 
     protected void loadData(Class<T> typeClass) {
-        if (!Files.exists(Path.of(getFileName()))) {
+        if (!Files.exists(getFilePath())) {
             LOGGER.info("Data files of {} not found", typeClass);
             return;
         }
-        try (BufferedReader souvenirsReader = Files.newBufferedReader(Path.of(getFileName()))) {
+        try (BufferedReader souvenirsReader = Files.newBufferedReader(getFilePath())) {
             items = objectMapper.readValue(souvenirsReader, objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, typeClass));
             LOGGER.debug("Data files of Souvenirs loaded successfully");
         } catch (IOException e) {

@@ -2,9 +2,9 @@ package org.task.souvenir;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.task.util.AbstractRepository;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,14 +14,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class SouvenirRepository {
+public class SouvenirRepository extends AbstractRepository<Souvenir> {
     private static final Logger LOGGER = LoggerFactory.getLogger(SouvenirRepository.class);
-    private static final Path SOUVENIRS_FILE = Path.of("souvenirs.csv");
-    private List<Souvenir> souvenirs = new ArrayList<>();
+    private static final Path SOUVENIRS_FILE = Path.of("souvenirs.json");
+    //    private List<Souvenir> souvenirs = new ArrayList<>();
     private static SouvenirRepository instance;
 
     private SouvenirRepository() {
-        loadData();
+        loadData(Souvenir.class);
+        Souvenir.setNextId(new AtomicInteger(items.getLast().getId() + 1));
+//        loadData();
     }
 
     public static SouvenirRepository getInstance() {
@@ -31,27 +33,8 @@ public class SouvenirRepository {
         return instance;
     }
 
-    public List<Souvenir> getSouvenirs() {
-        return souvenirs;
-    }
-
-    public void addSouvenir(Souvenir souvenir) {
-        souvenirs.add(souvenir);
-        saveData();
-    }
-
-    public void removeSouvenir(int id) {
-        List<Souvenir> souvenirs1 = souvenirs;
-        for (Souvenir x : souvenirs) {
-            if (x.getId() == id) {
-                souvenirs1.remove(x);
-                break;
-            }
-        }
-        saveData();
-    }
-
-    public void editSouvenir(int id, Souvenir souvenir) {
+    @Override
+    public void edit(int id, Souvenir souvenir) {
         Souvenir oldSouvenir = findSouvenirById(id).orElse(null);
         if (oldSouvenir != null) {
             oldSouvenir.setName(souvenir.getName());
@@ -61,8 +44,33 @@ public class SouvenirRepository {
         }
     }
 
+    @Override
+    protected Path getFilePath() {
+        return SOUVENIRS_FILE;
+    }
+
+//    public List<Souvenir> getSouvenirs() {
+//        return items;
+//    }
+
+//    public void addSouvenir(Souvenir souvenir) {
+//        souvenirs.add(souvenir);
+//        saveData();
+//    }
+
+//    public void removeSouvenir(int id) {
+//        List<Souvenir> souvenirs1 = souvenirs;
+//        for (Souvenir x : souvenirs) {
+//            if (x.getId() == id) {
+//                souvenirs1.remove(x);
+//                break;
+//            }
+//        }
+//        saveData();
+//    }
+
     public Optional<Souvenir> findSouvenirById(int id) {
-        for (Souvenir x : souvenirs) {
+        for (Souvenir x : items) {
             if (x.getId() == id) {
                 return Optional.of(x);
             }
@@ -71,42 +79,42 @@ public class SouvenirRepository {
     }
 
     public List<Souvenir> findSouvenirsByProducerId(int id) {
-        return souvenirs.stream().filter(x -> x.getProducerId() == id).toList();
+        return items.stream().filter(x -> x.getProducerId() == id).toList();
     }
 
     public List<String> getSouvenirTypes() {
-        return souvenirs.stream().map(Souvenir::getName).distinct().toList();
+        return items.stream().map(Souvenir::getName).distinct().toList();
     }
 
-    private void saveData() {
-        try (BufferedWriter souvenirsWriter = Files.newBufferedWriter(SOUVENIRS_FILE)) {
-            for (Souvenir souvenir : souvenirs) {
-                souvenirsWriter.write(souvenirToCSV(souvenir) + System.lineSeparator());
-            }
-            LOGGER.debug("Data of Souvenirs successfully saved");
-        } catch (IOException e) {
-            LOGGER.info("Error occurred while trying to save Souvenirs data", e);
-            throw new RuntimeException(e);
-        }
-    }
+//    private void saveData() {
+//        try (BufferedWriter souvenirsWriter = Files.newBufferedWriter(SOUVENIRS_FILE)) {
+//            for (Souvenir souvenir : souvenirs) {
+//                souvenirsWriter.write(souvenirToCSV(souvenir) + System.lineSeparator());
+//            }
+//            LOGGER.debug("Data of Souvenirs successfully saved");
+//        } catch (IOException e) {
+//            LOGGER.info("Error occurred while trying to save Souvenirs data", e);
+//            throw new RuntimeException(e);
+//        }
+//    }
 
-    private String souvenirToCSV(Souvenir souvenir) {
-        return souvenir.getId() + "," +
-                souvenir.getName() + "," +
-                souvenir.getProducerId() + "," +
-                souvenir.getCreationDate() + "," +
-                souvenir.getPrice();
-    }
-
+    //    private String souvenirToCSV(Souvenir souvenir) {
+//        return souvenir.getId() + "," +
+//                souvenir.getName() + "," +
+//                souvenir.getProducerId() + "," +
+//                souvenir.getCreationDate() + "," +
+//                souvenir.getPrice();
+//    }
+//
     private void loadData() {
         if (!Files.exists(SOUVENIRS_FILE)) {
             LOGGER.info("Data files of Souvenirs not found");
             return;
         }
         try (BufferedReader souvenirsReader = Files.newBufferedReader(SOUVENIRS_FILE)) {
-            souvenirs = new ArrayList<>(souvenirsReader.lines().map(this::mapToSouvenir).toList());
-            if (!souvenirs.isEmpty()) {
-                Souvenir.setNextId(new AtomicInteger(souvenirs.getLast().getId() + 1));
+            items = new ArrayList<>(souvenirsReader.lines().map(this::mapToSouvenir).toList()); // souvenirs
+            if (!items.isEmpty()) { // souvenirs
+                Souvenir.setNextId(new AtomicInteger(items.getLast().getId() + 1)); // souvenirs
                 LOGGER.debug("Data files of Souvenirs loaded successfully");
             }
         } catch (IOException e) {
